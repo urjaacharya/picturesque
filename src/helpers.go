@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -18,17 +21,29 @@ func Usage() {
 
 //ReadArgs Reads user provided arguments
 func ReadArgs() (string, string) {
-	inputImage := flag.String("input", "", "REQUIRED: input image")
-	outputDir := flag.String("outputDir", filepath.Join("output", "favicons"), "OPTIONAL: output folder to store the generated favicons")
+	// inputImage := flag.String("input", "", "REQUIRED: input image")
+	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
+	// outputDir := flag.String("outputDir", filepath.Join("output", "favicons"), "OPTIONAL: output folder to store the generated favicons")
 
+	//read arguments
+	// jsonFile, err := os.Open(*inputArgsFile)
+	//
 	flag.Usage = Usage
 	flag.Parse()
+	file, err := ioutil.ReadFile(*inputArgsFile)
 
-	if *inputImage == "" {
-		fmt.Println("ERROR: Input image not provided")
-		os.Exit(1)
+	var args map[string]interface{}
+	err = json.Unmarshal(file, &args)
+	if err != nil {
+		log.Fatalf("ERROR: %v", err)
+	}
+	if args["input_image"] == nil {
+		log.Fatalf("input_image missing in input json")
+	}
+	if args["output_dir"] == nil {
+		log.Fatalf("Path to output directory missing in input json")
 	}
 
-	output := filepath.FromSlash(*outputDir)
-	return *inputImage, output
+	output := filepath.FromSlash(fmt.Sprintf("%v", args["output_dir"]))
+	return fmt.Sprintf("%v", args["input_image"]), output
 }
