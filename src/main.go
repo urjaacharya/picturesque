@@ -16,21 +16,23 @@ const (
 )
 
 var faviconTypes = map[string]int{
-	"androidChrome512": 512,
-	"androidChrome192": 192,
-	"favicon16":        16,
-	"favicon32":        32,
-	"appleTouchIcon":   180,
+	"android-chrome-512x512": 512,
+	"android-chrome-192x192": 192,
+	"favicon-16x16":          16,
+	"favicon-32x32":          32,
+	"apple-touch-icon":       180,
 }
 
 func main() {
-	imgFile, err := imaging.Open("data/beach-soft-light.jpg")
+	inputImage, outputDir := ReadArgs()
+	fmt.Println(inputImage, outputDir)
+	imgFile, err := imaging.Open(inputImage)
 	if err != nil {
 		log.Fatalf("failed to open image: %v", err)
 	}
 
 	for imageType, imageSize := range faviconTypes {
-		generateFavicon(imgFile, imageType, imageSize)
+		generateFavicon(imgFile, imageType, imageSize, outputDir)
 	}
 	fmt.Println(androidChrome192)
 }
