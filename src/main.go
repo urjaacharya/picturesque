@@ -16,11 +16,12 @@ const (
 )
 
 var faviconTypes = map[string]int{
-	"android-chrome-512x512": 512,
-	"android-chrome-192x192": 192,
-	"favicon-16x16":          16,
-	"favicon-32x32":          32,
-	"apple-touch-icon":       180,
+	"android-chrome-512x512.png": 512,
+	"android-chrome-192x192.png": 192,
+	"favicon-16x16.png":          16,
+	"favicon-32x32.png":          32,
+	"apple-touch-icon.png":       180,
+	"favicon.ico":                48,
 }
 
 func main() {
