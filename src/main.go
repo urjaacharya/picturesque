@@ -33,5 +33,6 @@ func main() {
 	for imageType, imageSize := range faviconTypes {
 		generateFavicon(imgFile, imageType, imageSize, outputDir)
 	}
-	generateWebManifest(faviconTypes, outputDir, webManifestData)
+	outputManifest := generateWebManifest(faviconTypes, outputDir, webManifestData)
+	generateIconsList(faviconTypes, outputDir, outputManifest)
 }

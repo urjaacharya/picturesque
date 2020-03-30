@@ -14,9 +14,29 @@ import (
 	"github.com/disintegration/imaging"
 )
 
-func generateWebManifest(favicons map[string]int, outputDir string, webManifestData interface{}) {
+func generateIconsList(favicons map[string]int, outputDir string, outputData map[string]interface{}) {
+	iconsList := make([]map[string]string, 0)
+	data := make(map[string]string)
+	for imageType, imageSize := range faviconTypes {
+		if imageType != "favicon.ico" {
+			data["src"] = filepath.Join(outputDir, imageType)
+			data["sizes"] = fmt.Sprintf("%v", imageSize) + "x" + fmt.Sprintf("%v", imageSize)
+			data["type"] = "image/png"
+			iconsList = append(iconsList, data)
+			fmt.Println(iconsList)
+		}
+	}
+	outputData["icons"] = iconsList
+	jsonString, _ := json.Marshal(outputData)
+	err := ioutil.WriteFile(filepath.Join(outputDir, "site.webmanifest"), jsonString, os.ModePerm)
+	if err != nil {
+		log.Fatalf("failed to create file: %v", err)
+	}
+}
+
+func generateWebManifest(favicons map[string]int, outputDir string, webManifestData interface{}) map[string]interface{} {
 	inputData := webManifestData.(map[string]interface{})
-	outputData := make(map[string]string)
+	outputData := make(map[string]interface{})
 	outputData["name"] = func() string {
 		if inputData["name"] != nil {
 			return fmt.Sprintf("%v", inputData["name"])
@@ -48,6 +68,7 @@ func generateWebManifest(favicons map[string]int, outputDir string, webManifestD
 		log.Fatalf("failed to create file: %v", err)
 	}
 	fmt.Println(inputData["name"])
+	return outputData
 }
 func generateFavicon(inputImage image.Image, imageType string, imgSize int, outputDir string) {
 	src := imaging.Resize(inputImage, imgSize, imgSize, imaging.Lanczos)
@@ -70,4 +91,5 @@ func generateFavicon(inputImage image.Image, imageType string, imgSize int, outp
 	if err != nil {
 		log.Fatalf("failed to save image: %v", err)
 	}
+
 }
