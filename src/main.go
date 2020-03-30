@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/disintegration/imaging"
@@ -25,8 +24,7 @@ var faviconTypes = map[string]int{
 }
 
 func main() {
-	inputImage, outputDir := ReadArgs()
-	fmt.Println(inputImage, outputDir)
+	inputImage, outputDir, webManifestData := ReadArgs()
 	imgFile, err := imaging.Open(inputImage)
 	if err != nil {
 		log.Fatalf("failed to open image: %v", err)
@@ -35,5 +33,5 @@ func main() {
 	for imageType, imageSize := range faviconTypes {
 		generateFavicon(imgFile, imageType, imageSize, outputDir)
 	}
-	fmt.Println(androidChrome192)
+	generateWebManifest(faviconTypes, outputDir, webManifestData)
 }

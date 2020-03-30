@@ -20,23 +20,18 @@ func Usage() {
 }
 
 //ReadArgs Reads user provided arguments
-func ReadArgs() (string, string) {
-	// inputImage := flag.String("input", "", "REQUIRED: input image")
+func ReadArgs() (string, string, interface{}) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
-	// outputDir := flag.String("outputDir", filepath.Join("output", "favicons"), "OPTIONAL: output folder to store the generated favicons")
-
-	//read arguments
-	// jsonFile, err := os.Open(*inputArgsFile)
-	//
 	flag.Usage = Usage
 	flag.Parse()
 	file, err := ioutil.ReadFile(*inputArgsFile)
-
 	var args map[string]interface{}
 	err = json.Unmarshal(file, &args)
+
 	if err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
+	fmt.Println(args["new"])
 	if args["input_image"] == nil {
 		log.Fatalf("input_image missing in input json")
 	}
@@ -45,5 +40,5 @@ func ReadArgs() (string, string) {
 	}
 
 	output := filepath.FromSlash(fmt.Sprintf("%v", args["output_dir"]))
-	return fmt.Sprintf("%v", args["input_image"]), output
+	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"]
 }
