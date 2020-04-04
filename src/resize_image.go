@@ -15,17 +15,18 @@ import (
 )
 
 func generateIconsList(favicons map[string]int, outputDir string, outputData map[string]interface{}) {
-	iconsList := make([]map[string]string, 0)
-	data := make(map[string]string)
+	var iconsList []map[string]string
+
 	for imageType, imageSize := range faviconTypes {
 		if imageType != "favicon.ico" {
+			data := make(map[string]string)
 			data["src"] = filepath.Join(outputDir, imageType)
 			data["sizes"] = fmt.Sprintf("%v", imageSize) + "x" + fmt.Sprintf("%v", imageSize)
 			data["type"] = "image/png"
 			iconsList = append(iconsList, data)
-			fmt.Println(iconsList)
 		}
 	}
+
 	outputData["icons"] = iconsList
 	jsonString, _ := json.Marshal(outputData)
 	err := ioutil.WriteFile(filepath.Join(outputDir, "site.webmanifest"), jsonString, os.ModePerm)
