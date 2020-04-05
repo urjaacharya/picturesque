@@ -14,14 +14,16 @@ import (
 	"github.com/disintegration/imaging"
 )
 
-func generateIconsList(favicons map[string]int, outputDir string, outputData map[string]interface{}) {
+func generateIconsList(icons map[string]interface{}, outputDir string, outputData map[string]interface{}) {
 	var iconsList []map[string]string
 
-	for imageType, imageSize := range faviconTypes {
-		if imageType != "favicon.ico" {
+	for imageName, imageData := range icons {
+		imageHeight := imageData.(map[string]interface{})["height"]
+		imageWidth := imageData.(map[string]interface{})["width"]
+		if imageName != "favicon.ico" {
 			data := make(map[string]string)
-			data["src"] = filepath.Join(outputDir, imageType)
-			data["sizes"] = fmt.Sprintf("%v", imageSize) + "x" + fmt.Sprintf("%v", imageSize)
+			data["src"] = filepath.Join(outputDir, imageName+".png")
+			data["sizes"] = fmt.Sprintf("%v", imageWidth) + "x" + fmt.Sprintf("%v", imageHeight)
 			data["type"] = "image/png"
 			iconsList = append(iconsList, data)
 		}
@@ -35,7 +37,7 @@ func generateIconsList(favicons map[string]int, outputDir string, outputData map
 	}
 }
 
-func generateWebManifest(favicons map[string]int, outputDir string, webManifestData interface{}) map[string]interface{} {
+func generateWebManifest(outputDir string, webManifestData interface{}) map[string]interface{} {
 	inputData := webManifestData.(map[string]interface{})
 	outputData := make(map[string]interface{})
 	outputData["name"] = func() string {
