@@ -20,7 +20,7 @@ func Usage() {
 }
 
 //ReadArgs Reads user provided arguments
-func ReadArgs() (string, string, interface{}, interface{}) {
+func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{}) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage
 	flag.Parse()
@@ -41,6 +41,28 @@ func ReadArgs() (string, string, interface{}, interface{}) {
 
 	imagesOutputDir := args["output_paths"].(map[string]interface{})
 	iconsData := args["icons"].(map[string]interface{})
+	hrefData := args["link"].(map[string]interface{})
 	output := filepath.FromSlash(fmt.Sprintf("%v", imagesOutputDir["images"]))
-	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"], iconsData
+	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"], iconsData, hrefData
+}
+
+func generateHTML(icons map[string]interface{}, hrefData map[string]interface{}) {
+	file, err := os.Create("test.html") // Truncates if file already exists, be careful!
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+	defer file.Close() // Make sure to close the file when you're done
+	prefix := hrefData["href_prefix"].(string)
+	suffix := hrefData["href_suffix"].(string)
+
+	for imageName, imageData := range icons {
+		data := imageData.(map[string]interface{})
+		rel := data["rel"].([]interface{})
+		height := fmt.Sprintf("%v", data["height"])
+		width := fmt.Sprintf("%v", data["width"])
+		for item := range rel {
+			file.WriteString("<link rel=" + `"` + rel[item].(string) + `"` + " href=" + `"` + prefix + imageName + ".png" + suffix + `"` + " sizes=" + `"` + width + "x" + height + `"` + " type=" + `"` + "image/png" + `"` + "/>")
+		}
+
+	}
 }
