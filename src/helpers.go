@@ -20,7 +20,7 @@ func Usage() {
 }
 
 //ReadArgs Reads user provided arguments
-func ReadArgs() (string, string, interface{}) {
+func ReadArgs() (string, string, interface{}, interface{}) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage
 	flag.Parse()
@@ -35,10 +35,12 @@ func ReadArgs() (string, string, interface{}) {
 	if args["input_image"] == nil {
 		log.Fatalf("input_image missing in input json")
 	}
-	if args["output_dir"] == nil {
+	if args["output_paths"] == nil {
 		log.Fatalf("Path to output directory missing in input json")
 	}
 
-	output := filepath.FromSlash(fmt.Sprintf("%v", args["output_dir"]))
-	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"]
+	imagesOutputDir := args["output_paths"].(map[string]interface{})
+	iconsData := args["icons"].(map[string]interface{})
+	output := filepath.FromSlash(fmt.Sprintf("%v", imagesOutputDir["images"]))
+	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"], iconsData
 }

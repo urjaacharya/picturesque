@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/disintegration/imaging"
@@ -24,14 +25,16 @@ var faviconTypes = map[string]int{
 }
 
 func main() {
-	inputImage, outputDir, webManifestData := ReadArgs()
+	inputImage, outputDir, webManifestData, icons := ReadArgs()
+	iconsData := icons.(map[string]interface{})
 	imgFile, err := imaging.Open(inputImage)
+	fmt.Println(iconsData)
 	if err != nil {
 		log.Fatalf("failed to open image: %v", err)
 	}
 
-	for imageType, imageSize := range faviconTypes {
-		generateFavicon(imgFile, imageType, imageSize, outputDir)
+	for key, value := range iconsData {
+		generateFavicon(imgFile, key, value.(map[string]interface{}), outputDir)
 	}
 	outputManifest := generateWebManifest(faviconTypes, outputDir, webManifestData)
 	generateIconsList(faviconTypes, outputDir, outputManifest)

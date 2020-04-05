@@ -71,14 +71,15 @@ func generateWebManifest(favicons map[string]int, outputDir string, webManifestD
 	fmt.Println(inputData["name"])
 	return outputData
 }
-func generateFavicon(inputImage image.Image, imageType string, imgSize int, outputDir string) {
-	src := imaging.Resize(inputImage, imgSize, imgSize, imaging.Lanczos)
+
+func generateFavicon(inputImage image.Image, imageName string, imgData map[string]interface{}, outputDir string) {
+	src := imaging.Resize(inputImage, int(imgData["width"].(float64)), int(imgData["height"].(float64)), imaging.Lanczos)
 	err := os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {
 		log.Fatalf("failed to create output directory: %v", err)
 	}
-	if imageType == "favicon.ico" {
-		imgFile, err := os.Create(filepath.Join(outputDir, imageType))
+	if imageName == "favicon.ico" {
+		imgFile, err := os.Create(filepath.Join(outputDir, imageName+".png"))
 		buf := new(bytes.Buffer)
 		err = png.Encode(buf, src)
 		imgFile.Write(buf.Bytes())
@@ -87,7 +88,7 @@ func generateFavicon(inputImage image.Image, imageType string, imgSize int, outp
 		}
 		return
 	}
-	err = imaging.Save(src, filepath.Join(outputDir, imageType))
+	err = imaging.Save(src, filepath.Join(outputDir, imageName+".png"))
 
 	if err != nil {
 		log.Fatalf("failed to save image: %v", err)
