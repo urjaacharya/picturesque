@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	inputImage, outputDir, webManifestData, icons, hrefData := ReadArgs()
+	inputImage, outputDir, webManifestData, icons, hrefData, htmlFilepath := ReadArgs()
 	iconsData := icons.(map[string]interface{})
 	imgFile, err := imaging.Open(inputImage)
 
@@ -20,5 +20,5 @@ func main() {
 	}
 	outputManifest := generateWebManifest(outputDir, webManifestData)
 	generateIconsList(iconsData, outputDir, outputManifest)
-	generateHTML(iconsData, hrefData)
+	generateHTML(iconsData, hrefData, htmlFilepath)
 }

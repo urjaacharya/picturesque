@@ -20,7 +20,7 @@ func Usage() {
 }
 
 //ReadArgs Reads user provided arguments
-func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{}) {
+func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{}, string) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage
 	flag.Parse()
@@ -35,19 +35,21 @@ func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{
 	if args["input_image"] == nil {
 		log.Fatalf("input_image missing in input json")
 	}
-	if args["output_paths"] == nil {
+	if args["output"] == nil {
 		log.Fatalf("Path to output directory missing in input json")
 	}
 
-	imagesOutputDir := args["output_paths"].(map[string]interface{})
+	imagesOutputDir := args["output"].(map[string]interface{})
 	iconsData := args["icons"].(map[string]interface{})
 	hrefData := args["link"].(map[string]interface{})
 	output := filepath.FromSlash(fmt.Sprintf("%v", imagesOutputDir["images"]))
-	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"], iconsData, hrefData
+	html := imagesOutputDir["html"].(map[string]interface{})
+	htmlFilepath := filepath.Join(html["path"].(string), html["name"].(string))
+	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"], iconsData, hrefData, htmlFilepath
 }
 
-func generateHTML(icons map[string]interface{}, hrefData map[string]interface{}) {
-	file, err := os.Create("test.html") // Truncates if file already exists, be careful!
+func generateHTML(icons map[string]interface{}, hrefData map[string]interface{}, filePath string) {
+	file, err := os.Create(filePath + ".html") // Truncates if file already exists, be careful!
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
 	}
