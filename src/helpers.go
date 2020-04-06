@@ -42,7 +42,7 @@ func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{
 	imagesOutputDir := args["output"].(map[string]interface{})
 	iconsData := args["icons"].(map[string]interface{})
 	hrefData := args["link"].(map[string]interface{})
-	output := filepath.FromSlash(fmt.Sprintf("%v", imagesOutputDir["images"]))
+	output := filepath.FromSlash(fmt.Sprintf("%v", imagesOutputDir["images_path"]))
 	html := imagesOutputDir["html"].(map[string]interface{})
 	htmlFilepath := filepath.Join(html["path"].(string), html["name"].(string))
 	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"], iconsData, hrefData, htmlFilepath
