@@ -1,0 +1,31 @@
+{
+  "input_image": "data/beach-soft-light.jpg",
+  "output": {
+    "images_path": "output",
+    "html": {
+      "path": "html_output",
+      "name": "test"
+    }
+  },
+  "link": {
+    "href_prefix": "",
+    "href_suffix": "` | relURL }}"
+  },
+  "site_webmanifest": {
+    "background_color": "#000",
+    "name": "test",
+    "short_name": "short",
+    "theme_color": "#ffffff"
+  },
+  "icons": {
+    "favicon-16": { "width": 16, "height": 16, "rel": ["icon"] },
+    "favicon-32": { "width": 32, "height": 32, "rel": ["icon"] },
+    "favicon-120": { "width": 120, "height": 120, "rel": ["apple-touch-icon"] },
+    "favicon-128": { "width": 128, "height": 128, "rel": ["icon"] },
+    "favicon-152": { "width": 152, "height": 152, "rel": ["apple-touch-icon"] },
+    "favicon-167": { "width": 167, "height": 167, "rel": ["apple-touch-icon"] },
+    "favicon-180": { "width": 180, "height": 180, "rel": ["apple-touch-icon"] },
+    "favicon-192": { "width": 192, "height": 192, "rel": ["icon"] },
+    "favicon-196": { "width": 196, "height": 196, "rel": ["icon"] }
+  }
+}
