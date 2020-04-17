@@ -19,28 +19,6 @@ func Usage() {
 	os.Exit(1)
 }
 
-func verifyArguments() {
-	inputArgsFile := flag.String("inputArgsFile", "", "REQUIRED: input json with input arguments")
-	flag.Usage = Usage
-	flag.Parse()
-	file, err := ioutil.ReadFile(*inputArgsFile)
-	var args map[string]interface{}
-	err = json.Unmarshal(file, &args)
-
-	if err != nil {
-		log.Fatalf("ERROR: %v", err)
-	}
-	if args["input_image"] == nil {
-		log.Fatalf("input_image missing in input json")
-	}
-	if args["output"] == nil {
-		log.Fatalf("Path to output directory missing in input json")
-	}
-	if args["output"] == nil {
-		log.Fatalf("Path to output directory missing in input json")
-	}
-}
-
 type arguments struct {
 	Input_image      string
 	Output           output
@@ -119,41 +97,20 @@ func ReadArgs() (string, string, Webmanifest, interface{}, Link, string) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage
 	flag.Parse()
-	var names arguments
 
 	file, err := ioutil.ReadFile(*inputArgsFile)
-	var args map[string]interface{}
+	var args arguments
 	err = json.Unmarshal(file, &args)
-	err = json.Unmarshal(file, &names)
-	validateArguments(names)
+	validateArguments(args)
+
 	if err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
 
-	iconsData := names.Icons.(map[string]interface{})
-	hrefData := names.Link
-	output := filepath.FromSlash(names.Output.Images_path)
-	htmlFilepath := filepath.Join(names.Output.HTML.Path, names.Output.HTML.Name)
-	return names.Input_image, output, names.Site_webmanifest, iconsData, hrefData, htmlFilepath
-}
+	iconsData := args.Icons.(map[string]interface{})
+	hrefData := args.Link
+	output := filepath.FromSlash(args.Output.Images_path)
+	htmlFilepath := filepath.Join(args.Output.HTML.Path, args.Output.HTML.Name)
 
-func generateHTML(icons map[string]interface{}, hrefData Link, filePath string) {
-	file, err := os.Create(filePath + ".html") // Truncates if file already exists, be careful!
-	if err != nil {
-		log.Fatalf("failed creating file: %s", err)
-	}
-	defer file.Close() // Make sure to close the file when you're done
-	prefix := hrefData.Href_prefix
-	suffix := hrefData.Href_suffix
-
-	for imageName, imageData := range icons {
-		data := imageData.(map[string]interface{})
-		rel := data["rel"].([]interface{})
-		height := fmt.Sprintf("%v", data["height"])
-		width := fmt.Sprintf("%v", data["width"])
-		for item := range rel {
-			file.WriteString("<link rel=" + `"` + rel[item].(string) + `"` + " href=" + `"` + prefix + imageName + ".png" + suffix + `"` + " sizes=" + `"` + width + "x" + height + `"` + " type=" + `"` + "image/png" + `"` + "/>")
-		}
-
-	}
+	return args.Input_image, output, args.Site_webmanifest, iconsData, hrefData, htmlFilepath
 }

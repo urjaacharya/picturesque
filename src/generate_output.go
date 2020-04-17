@@ -97,3 +97,24 @@ func generateFavicon(inputImage image.Image, imageName string, imgData map[strin
 	}
 
 }
+
+func generateHTML(icons map[string]interface{}, hrefData Link, filePath string) {
+	file, err := os.Create(filePath + ".html") // Truncates if file already exists, be careful!
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+	defer file.Close() // Make sure to close the file when you're done
+	prefix := hrefData.Href_prefix
+	suffix := hrefData.Href_suffix
+
+	for imageName, imageData := range icons {
+		data := imageData.(map[string]interface{})
+		rel := data["rel"].([]interface{})
+		height := fmt.Sprintf("%v", data["height"])
+		width := fmt.Sprintf("%v", data["width"])
+		for item := range rel {
+			file.WriteString("<link rel=" + `"` + rel[item].(string) + `"` + " href=" + `"` + prefix + imageName + ".png" + suffix + `"` + " sizes=" + `"` + width + "x" + height + `"` + " type=" + `"` + "image/png" + `"` + "/>")
+		}
+
+	}
+}
