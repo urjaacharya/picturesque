@@ -87,19 +87,36 @@ type faviconInfo struct {
 	Rel    []string
 }
 
-func test() {
-	new_file, err := ioutil.ReadFile("./test.json")
-	var names arguments
-	err = json.Unmarshal(new_file, &names)
-	fmt.Println(names)
-	if err != nil {
-		log.Fatalf("ERROR: %v", err)
+// validate arguments: validate input arguments
+func validateArguments(args arguments) {
+	if args.Input_image == "" {
+		log.Fatalf("input_image missing in input json")
+	}
+	if args.Output.Images_path == "" {
+		log.Fatalf("Path to output directory for images missing in input json")
+	}
+	if args.Output.HTML.Path == "" {
+		log.Fatalf("Path to output directory for html file missing in input json")
+	}
+	if args.Output.HTML.Name == "" {
+		log.Fatalf("Name of HTML file is missing in input json")
+	}
+	if args.Site_webmanifest.Background_color == "" {
+		args.Site_webmanifest.Background_color = "#ffffff"
+	}
+	if args.Site_webmanifest.Theme_color == "" {
+		args.Site_webmanifest.Theme_color = "#ffffff"
+	}
+	if args.Site_webmanifest.Name == "" {
+		args.Site_webmanifest.Name = "default-name"
+	}
+	if args.Site_webmanifest.Short_name == "" {
+		args.Site_webmanifest.Short_name = "default-short-name"
 	}
 }
 
 //ReadArgs Reads user provided arguments
 func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{}, string) {
-	test()
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage
 	flag.Parse()
@@ -110,6 +127,7 @@ func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{
 	err = json.Unmarshal(file, &args)
 	err = json.Unmarshal(file, &names)
 	fmt.Println(names)
+	validateArguments(names)
 	// To do: add function to check input arguments in input json
 	if err != nil {
 		log.Fatalf("ERROR: %v", err)
@@ -125,10 +143,10 @@ func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{
 	imagesOutputDir := args["output"].(map[string]interface{})
 	iconsData := args["icons"].(map[string]interface{})
 	hrefData := args["link"].(map[string]interface{})
-	output := filepath.FromSlash(fmt.Sprintf("%v", imagesOutputDir["images_path"]))
+	output := filepath.FromSlash(fmt.Sprintf("%v", names.Output.Images_path))
 	html := imagesOutputDir["html"].(map[string]interface{})
 	htmlFilepath := filepath.Join(html["path"].(string), html["name"].(string))
-	return fmt.Sprintf("%v", args["input_image"]), output, args["site_webmanifest"], iconsData, hrefData, htmlFilepath
+	return fmt.Sprintf("%v", names.Input_image), output, args["site_webmanifest"], iconsData, hrefData, htmlFilepath
 }
 
 func generateHTML(icons map[string]interface{}, hrefData map[string]interface{}, filePath string) {
