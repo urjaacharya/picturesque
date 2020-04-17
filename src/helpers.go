@@ -30,7 +30,6 @@ func verifyArguments() {
 	if err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
-	fmt.Println(args["new"])
 	if args["input_image"] == nil {
 		log.Fatalf("input_image missing in input json")
 	}
@@ -45,9 +44,9 @@ func verifyArguments() {
 type arguments struct {
 	Input_image      string
 	Output           output
-	Link             link
-	Site_webmanifest webmanifest
-	Icons            icons
+	Link             Link
+	Site_webmanifest Webmanifest
+	Icons            interface{}
 }
 type output struct {
 	Images_path string
@@ -58,34 +57,34 @@ type html struct {
 	Path string
 	Name string
 }
-type link struct {
+type Link struct {
 	Href_prefix string
 	Href_suffix string
 }
-type webmanifest struct {
+type Webmanifest struct {
 	Background_color string
 	Name             string
 	Short_name       string
 	Theme_color      string
 }
 
-type icons struct {
-	Favicon16  faviconInfo `json:"favicon-16"`
-	Favicon32  faviconInfo `json:"favicon-32"`
-	Favicon120 faviconInfo `json:"favicon-120"`
-	Favicon128 faviconInfo `json:"favicon-128"`
-	Favicon152 faviconInfo `json:"favicon-152"`
-	Favicon167 faviconInfo `json:"favicon-167"`
-	Favicon180 faviconInfo `json:"favicon-180"`
-	Favicon192 faviconInfo `json:"favicon-192"`
-	Favicon196 faviconInfo `json:"favicon-196"`
-}
+// type icons struct {
+// 	Favicon16  faviconInfo `json:"favicon-16"`
+// 	Favicon32  faviconInfo `json:"favicon-32"`
+// 	Favicon120 faviconInfo `json:"favicon-120"`
+// 	Favicon128 faviconInfo `json:"favicon-128"`
+// 	Favicon152 faviconInfo `json:"favicon-152"`
+// 	Favicon167 faviconInfo `json:"favicon-167"`
+// 	Favicon180 faviconInfo `json:"favicon-180"`
+// 	Favicon192 faviconInfo `json:"favicon-192"`
+// 	Favicon196 faviconInfo `json:"favicon-196"`
+// }
 
-type faviconInfo struct {
-	Width  uint16
-	Height uint16
-	Rel    []string
-}
+// type faviconInfo struct {
+// 	Width  uint16
+// 	Height uint16
+// 	Rel    []string
+// }
 
 // validate arguments: validate input arguments
 func validateArguments(args arguments) {
@@ -116,7 +115,7 @@ func validateArguments(args arguments) {
 }
 
 //ReadArgs Reads user provided arguments
-func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{}, string) {
+func ReadArgs() (string, string, Webmanifest, interface{}, Link, string) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage
 	flag.Parse()
@@ -126,37 +125,26 @@ func ReadArgs() (string, string, interface{}, interface{}, map[string]interface{
 	var args map[string]interface{}
 	err = json.Unmarshal(file, &args)
 	err = json.Unmarshal(file, &names)
-	fmt.Println(names)
 	validateArguments(names)
-	// To do: add function to check input arguments in input json
 	if err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
-	fmt.Println(args["new"])
-	if args["input_image"] == nil {
-		log.Fatalf("input_image missing in input json")
-	}
-	if args["output"] == nil {
-		log.Fatalf("Path to output directory missing in input json")
-	}
 
-	imagesOutputDir := args["output"].(map[string]interface{})
-	iconsData := args["icons"].(map[string]interface{})
-	hrefData := args["link"].(map[string]interface{})
-	output := filepath.FromSlash(fmt.Sprintf("%v", names.Output.Images_path))
-	html := imagesOutputDir["html"].(map[string]interface{})
-	htmlFilepath := filepath.Join(html["path"].(string), html["name"].(string))
-	return fmt.Sprintf("%v", names.Input_image), output, args["site_webmanifest"], iconsData, hrefData, htmlFilepath
+	iconsData := names.Icons.(map[string]interface{})
+	hrefData := names.Link
+	output := filepath.FromSlash(names.Output.Images_path)
+	htmlFilepath := filepath.Join(names.Output.HTML.Path, names.Output.HTML.Name)
+	return names.Input_image, output, names.Site_webmanifest, iconsData, hrefData, htmlFilepath
 }
 
-func generateHTML(icons map[string]interface{}, hrefData map[string]interface{}, filePath string) {
+func generateHTML(icons map[string]interface{}, hrefData Link, filePath string) {
 	file, err := os.Create(filePath + ".html") // Truncates if file already exists, be careful!
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
 	}
 	defer file.Close() // Make sure to close the file when you're done
-	prefix := hrefData["href_prefix"].(string)
-	suffix := hrefData["href_suffix"].(string)
+	prefix := hrefData.Href_prefix
+	suffix := hrefData.Href_suffix
 
 	for imageName, imageData := range icons {
 		data := imageData.(map[string]interface{})

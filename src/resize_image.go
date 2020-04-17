@@ -37,30 +37,30 @@ func generateIconsList(icons map[string]interface{}, outputDir string, outputDat
 	}
 }
 
-func generateWebManifest(outputDir string, webManifestData interface{}) map[string]interface{} {
-	inputData := webManifestData.(map[string]interface{})
+func generateWebManifest(outputDir string, webManifestData Webmanifest) map[string]interface{} {
+	//inputData := webManifestData.(map[string]interface{})
 	outputData := make(map[string]interface{})
 	outputData["name"] = func() string {
-		if inputData["name"] != nil {
-			return fmt.Sprintf("%v", inputData["name"])
+		if webManifestData.Name != "" {
+			return fmt.Sprintf("%v", webManifestData.Name)
 		}
 		return ""
 	}()
 	outputData["short_name"] = func() string {
-		if inputData["short_name"] != nil {
-			return fmt.Sprintf("%v", inputData["short_name"])
+		if webManifestData.Short_name != "" {
+			return fmt.Sprintf("%v", webManifestData.Short_name)
 		}
 		return ""
 	}()
 	outputData["background_color"] = func() string {
-		if inputData["background_color"] != nil {
-			return fmt.Sprintf("%v", inputData["background_color"])
+		if webManifestData.Background_color != "" {
+			return fmt.Sprintf("%v", webManifestData.Background_color)
 		}
 		return "#ffffff"
 	}()
 	outputData["theme_color"] = func() string {
-		if inputData["theme_color"] != nil {
-			return fmt.Sprintf("%v", inputData["theme_color"])
+		if webManifestData.Theme_color != "" {
+			return fmt.Sprintf("%v", webManifestData.Theme_color)
 		}
 		return "#ffffff"
 	}()
@@ -70,7 +70,7 @@ func generateWebManifest(outputDir string, webManifestData interface{}) map[stri
 	if err != nil {
 		log.Fatalf("failed to create file: %v", err)
 	}
-	fmt.Println(inputData["name"])
+
 	return outputData
 }
 
