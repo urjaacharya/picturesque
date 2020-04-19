@@ -14,7 +14,7 @@ import (
 	"github.com/disintegration/imaging"
 )
 
-func generateIconsList(icons map[string]interface{}, outputDir string, outputData map[string]interface{}) {
+func GenerateIconsList(icons map[string]interface{}, outputDir string, outputData map[string]interface{}) {
 	var iconsList []map[string]string
 
 	for imageName, imageData := range icons {
@@ -37,7 +37,7 @@ func generateIconsList(icons map[string]interface{}, outputDir string, outputDat
 	}
 }
 
-func generateWebManifest(outputDir string, webManifestData Webmanifest) map[string]interface{} {
+func GenerateWebManifest(outputDir string, webManifestData Webmanifest) map[string]interface{} {
 	//inputData := webManifestData.(map[string]interface{})
 	outputData := make(map[string]interface{})
 	outputData["name"] = func() string {
@@ -74,7 +74,7 @@ func generateWebManifest(outputDir string, webManifestData Webmanifest) map[stri
 	return outputData
 }
 
-func generateFavicon(inputImage image.Image, imageName string, imgData map[string]interface{}, outputDir string) {
+func GenerateFavicon(inputImage image.Image, imageName string, imgData map[string]interface{}, outputDir string) {
 	src := imaging.Resize(inputImage, int(imgData["width"].(float64)), int(imgData["height"].(float64)), imaging.Lanczos)
 	err := os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {
@@ -98,7 +98,7 @@ func generateFavicon(inputImage image.Image, imageName string, imgData map[strin
 
 }
 
-func generateHTML(icons map[string]interface{}, hrefData Link, filePath string) {
+func GenerateHTML(icons map[string]interface{}, hrefData Link, filePath string) {
 	file, err := os.Create(filePath + ".html") // Truncates if file already exists, be careful!
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)

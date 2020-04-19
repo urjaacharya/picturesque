@@ -16,9 +16,9 @@ func main() {
 	}
 
 	for key, value := range iconsData {
-		generateFavicon(imgFile, key, value.(map[string]interface{}), outputDir)
+		GenerateFavicon(imgFile, key, value.(map[string]interface{}), outputDir)
 	}
-	outputManifest := generateWebManifest(outputDir, webManifestData)
-	generateIconsList(iconsData, outputDir, outputManifest)
-	generateHTML(iconsData, hrefData, htmlFilepath)
+	outputManifest := GenerateWebManifest(outputDir, webManifestData)
+	GenerateIconsList(iconsData, outputDir, outputManifest)
+	GenerateHTML(iconsData, hrefData, htmlFilepath)
 }
