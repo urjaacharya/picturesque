@@ -1,5 +1,5 @@
 {
-  "input_image": "data/beach-soft-light.jpg",
+  "input_image": "data/sample-image.jpg",
   "output": {
     "images_path": "output",
     "html": {
