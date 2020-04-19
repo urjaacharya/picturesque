@@ -3,7 +3,7 @@
   "output": {
     "images_path": "output",
     "html": {
-      "path": "html_output",
+      "path": "output",
       "name": "test"
     }
   },
