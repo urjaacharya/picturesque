@@ -1,28 +1,41 @@
 # picturesque
-picturesque is a tool that creates favicons of the sizes you specify and generates HTML script with the favicon declarations along with the site webmanifest file. 
 
-**Usage**
+picturesque is a tool that creates favicons of the sizes you specify and generates HTML script (goes in `head` eventually) with the favicon declarations along with the site webmanifest file.
+
+## Executables:
+
+The binary files for *nix and Windows system are in `bin` folder.
+
+## Build from source
+
+1. Get the repository:
+`go get -u github.com/urjaacharya/picturesque`
+2. Navigate to the root of the repo you downloaded above (i.e picturesque) and run `go build`
+    
+## Usage
+
+### Arguments JSON
 
 Specify the input arguments in a `.json` file. Following is the sample json:
 ```
 {
   "input_image": <Path to the input image>,
   "output": {
-    "images_path": <Path to save output favicons to>,
+    "images_path": <Path to save output images to>,
     "html": {
       "path": <Path to save output HTML script>,
       "name": <Name of output HTML script>
     }
   },
   "link": {
-    "href_prefix": <content to be appended before location of all favicons>,
-    "href_suffix": <content to be appended after location of all favicons>
+    "href_prefix": <string to be appended before the href value>,
+    "href_suffix": <string to be appended after the href value>
   },
   "site_webmanifest": {
     "background_color": <hexcode of background color to be used in webmanifest file>,
-    "name": <name used in webmanifest file>,
-    "short_name": <name used in webmanifest file>,
-    "theme_color": <hexcode of theme color to be used in webmanifest file>
+    "name": <site name used in webmanifest file>,
+    "short_name": <short name for site used in webmanifest file>,
+    "theme_color": <hexcode of site theme color to be used in webmanifest file>
   },
   "icons": {
     <Name of output favicon>: { "width": <width of outout favicon>, "height": <height of output favicon>, "rel": <Array of rel attributes> },
@@ -31,22 +44,17 @@ Specify the input arguments in a `.json` file. Following is the sample json:
 ```
 An example of sample json is also provided in `data/sample-input.json`
 
-1. Run directly using binary executables:
-    -  The binary files for *nix and Windows system are in `bin` folder.
+### Running `picturesque` in commandline
 
-        *For Linux/Unix system:*
+#### For Linux/Unix system:
 
-        Run the following from the terminal:
-`./picturesque --inputArgs data/sample-input.json`
+```
+./picturesque --inputArgs data/sample-input.json
+```
 
-        *For Windows system:*
+#### For Windows system:
 
-        Run the following from the terminal:
-`./picturesque.exe --inputArgs data/sample-input.json`
+```
+./picturesque.exe --inputArgs data/sample-input.json
+```
 
-2. Generate executables and run it:
-    - Get the repository:
-`go get -u github.com/urjaacharya/picturesque`
-    - Navigate to the root of the repo you downloaded above (i.e picturesque). Now, build the repository: 
-`go build`
-    - Now, run the generated executables following the steps listed in 1.
