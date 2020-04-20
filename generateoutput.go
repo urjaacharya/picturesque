@@ -113,7 +113,7 @@ func GenerateHTML(icons map[string]interface{}, hrefData Link, filePath string) 
 		height := fmt.Sprintf("%v", data["height"])
 		width := fmt.Sprintf("%v", data["width"])
 		for item := range rel {
-			file.WriteString("<link rel=" + `"` + rel[item].(string) + `"` + " href=" + `"` + prefix + imageName + ".png" + suffix + `"` + " sizes=" + `"` + width + "x" + height + `"` + " type=" + `"` + "image/png" + `"` + "/>")
+			file.WriteString("<link rel=" + `"` + rel[item].(string) + `"` + " href=" + `"` + prefix + imageName + ".png" + suffix + `"` + " sizes=" + `"` + width + "x" + height + `"` + " type=" + `"` + "image/png" + `"` + "/>\n")
 		}
 
 	}
