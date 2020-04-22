@@ -1,10 +1,6 @@
 # picturesque
 
-picturesque is a tool that creates favicons of the sizes you specify and generates HTML script (goes in `head` eventually) with the favicon declarations along with the site webmanifest file.
-
-## Executables:
-
-The binary files for *nix and Windows system are in `bin` folder.
+picturesque is a favicon generator meant to be used with static website generator(for eg. Hugo). It generates favicons of specified sizes and generates HTML script (goes in `head` eventually) with the favicon declarations along with the site webmanifest file.
 
 ## Build from source
 
