@@ -24,8 +24,8 @@ Specify the input arguments in a `.json` file. Following is the sample json:
     }
   },
   "link": {
-    "href_prefix": <string to be appended before the href value>,
-    "href_suffix": <string to be appended after the href value>
+    "href_prefix": <HREF_PREFIX>,
+    "href_suffix": <HREF_SUFFIX>
   },
   "site_webmanifest": {
     "background_color": <hexcode of background color to be used in webmanifest file>,
@@ -38,7 +38,16 @@ Specify the input arguments in a `.json` file. Following is the sample json:
   }
 }
 ```
-An example of sample json is also provided in `data/sample-input.json`
+In the above json, `HREF_PREFIX` and `HREF_SUFFIX` are prefix and suffix that you can be added to location of each favicon. For example, if these both are empty strings, the `link` tag for each favicon would look something like the following:
+```
+<link rel="icon" type="image/png" href="myicon.png"/>
+```
+If you are planning to use the generated HTML script for a Hugo project, the `link` tags for each favicon would look like the following:
+```
+<link rel="icon" type="image/png" href="{{ `favicon-32.png` | relURL }}"/>
+```
+Therefore, to add these extra information in addition to favicon location, use `HREF_PREFIX` as "{{ \`" and `HREF_SUFFIX` as "\` | relURL }}". 
+An example of sample json is also provided in `data/sample-input.json`.
 
 ### Running `picturesque` in commandline
 
