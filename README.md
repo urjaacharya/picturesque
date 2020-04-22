@@ -1,6 +1,6 @@
 # picturesque
 
-picturesque is a favicon generator meant to be used with static website generator(for eg. Hugo). It generates favicons of specified sizes and generates HTML script (goes in `head` eventually) with the favicon declarations along with the site webmanifest file.
+picturesque is a favicon generator meant to be used with static website generator (for eg. Hugo). It generates favicons of specified sizes and generates HTML script (goes in `head` eventually) with the favicon declarations along with the site webmanifest file.
 
 ## Build from source
 
