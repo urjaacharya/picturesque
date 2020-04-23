@@ -46,25 +46,7 @@ type Webmanifest struct {
 	Theme_color      string
 }
 
-// type icons struct {
-// 	Favicon16  faviconInfo `json:"favicon-16"`
-// 	Favicon32  faviconInfo `json:"favicon-32"`
-// 	Favicon120 faviconInfo `json:"favicon-120"`
-// 	Favicon128 faviconInfo `json:"favicon-128"`
-// 	Favicon152 faviconInfo `json:"favicon-152"`
-// 	Favicon167 faviconInfo `json:"favicon-167"`
-// 	Favicon180 faviconInfo `json:"favicon-180"`
-// 	Favicon192 faviconInfo `json:"favicon-192"`
-// 	Favicon196 faviconInfo `json:"favicon-196"`
-// }
-
-// type faviconInfo struct {
-// 	Width  uint16
-// 	Height uint16
-// 	Rel    []string
-// }
-
-// validate arguments: validate input arguments
+// validateArguments: validate input arguments
 func validateArguments(args arguments) {
 	if args.Input_image == "" {
 		log.Fatalf("input_image missing in input json")
@@ -92,7 +74,7 @@ func validateArguments(args arguments) {
 	}
 }
 
-//ReadArgs Reads user provided arguments
+//ReadArgs Reads user provided arguments from the input file
 func ReadArgs() (string, string, Webmanifest, interface{}, Link, string) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage

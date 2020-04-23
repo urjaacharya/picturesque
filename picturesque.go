@@ -15,10 +15,11 @@ func main() {
 		log.Fatalf("failed to open image: %v", err)
 	}
 
+	// generates favicons for all specified sizes
 	for key, value := range iconsData {
 		GenerateFavicon(imgFile, key, value.(map[string]interface{}), outputDir)
 	}
 	outputManifest := GenerateWebManifest(outputDir, webManifestData)
-	GenerateIconsList(iconsData, outputDir, outputManifest)
+	AddIconsListToWebManifest(iconsData, outputDir, outputManifest)
 	GenerateHTML(iconsData, hrefData, htmlFilepath)
 }
