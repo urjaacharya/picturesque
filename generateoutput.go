@@ -14,7 +14,8 @@ import (
 	"github.com/disintegration/imaging"
 )
 
-func GenerateIconsList(icons map[string]interface{}, outputDir string, outputData map[string]interface{}) {
+// AddIconsListToWebManifest Adds icons' list to site webmanifest file
+func AddIconsListToWebManifest(icons map[string]interface{}, outputDir string, outputData map[string]interface{}) {
 	var iconsList []map[string]string
 
 	for imageName, imageData := range icons {
@@ -37,8 +38,8 @@ func GenerateIconsList(icons map[string]interface{}, outputDir string, outputDat
 	}
 }
 
+// GenerateWebManifest Generates site webmanifest file
 func GenerateWebManifest(outputDir string, webManifestData Webmanifest) map[string]interface{} {
-	//inputData := webManifestData.(map[string]interface{})
 	outputData := make(map[string]interface{})
 	outputData["name"] = func() string {
 		if webManifestData.Name != "" {
@@ -74,6 +75,7 @@ func GenerateWebManifest(outputDir string, webManifestData Webmanifest) map[stri
 	return outputData
 }
 
+// GenerateFavicon Generates favicon of specified size
 func GenerateFavicon(inputImage image.Image, imageName string, imgData map[string]interface{}, outputDir string) {
 	src := imaging.Resize(inputImage, int(imgData["width"].(float64)), int(imgData["height"].(float64)), imaging.Lanczos)
 	err := os.MkdirAll(outputDir, os.ModePerm)
@@ -98,12 +100,13 @@ func GenerateFavicon(inputImage image.Image, imageName string, imgData map[strin
 
 }
 
+// GenerateHTML Generates HTML file with favicon definitions
 func GenerateHTML(icons map[string]interface{}, hrefData Link, filePath string) {
-	file, err := os.Create(filePath + ".html") // Truncates if file already exists, be careful!
+	file, err := os.Create(filePath + ".html")
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
 	}
-	defer file.Close() // Make sure to close the file when you're done
+	defer file.Close()
 	prefix := hrefData.Href_prefix
 	suffix := hrefData.Href_suffix
 
@@ -115,6 +118,5 @@ func GenerateHTML(icons map[string]interface{}, hrefData Link, filePath string) 
 		for item := range rel {
 			file.WriteString("<link rel=" + `"` + rel[item].(string) + `"` + " href=" + `"` + prefix + imageName + ".png" + suffix + `"` + " sizes=" + `"` + width + "x" + height + `"` + " type=" + `"` + "image/png" + `"` + "/>\n")
 		}
-
 	}
 }
