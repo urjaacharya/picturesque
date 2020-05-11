@@ -87,6 +87,8 @@ func GenerateFavicon(inputImage image.Image, imageName string, imgData map[strin
 		buf := new(bytes.Buffer)
 		err = png.Encode(buf, src)
 		imgFile.Write(buf.Bytes())
+		defer imgFile.Close()
+
 		if err != nil {
 			log.Fatalf("failed to save image: %v", err)
 		}
