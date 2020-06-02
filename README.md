@@ -63,3 +63,11 @@ An example of sample json is also provided in `data/sample-input.json`.
 ./picturesque.exe --inputArgs data/sample-input.json
 ```
 
+## To contribute
+### Install pre-commit hooks
+The pre-commit hooks in the repository uses `goimports` to fix imports and formats the `.go` files. To install it, copy the contents of the file `bin/pre-commit.sh` to `.git/hooks/precommit`.
+```
+cp bin/pre-commit.sh .git/hooks/pre-commit
+```
+### Create a Pull request
+Create a pull request for your change.
