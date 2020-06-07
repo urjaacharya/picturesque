@@ -84,8 +84,7 @@ func GenerateWebManifest(outputDir string, webManifestData map[string]interface{
 
 // GenerateFavicon Generates favicon of specified size
 func GenerateFavicon(inputImage image.Image, imageName string, imgData map[string]interface{}, outputDir string) {
-	//to do: crop image to fix aspect ratio
-	src := imaging.Resize(inputImage, int(imgData["width"].(float64)), int(imgData["height"].(float64)), imaging.Lanczos)
+	src := imaging.Fill(inputImage, int(imgData["width"].(float64)), int(imgData["height"].(float64)), imaging.Center, imaging.Lanczos)
 	err := os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {
 		log.Fatalf("failed to create output directory: %v", err)
