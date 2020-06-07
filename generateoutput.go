@@ -39,29 +39,36 @@ func AddIconsListToWebManifest(icons map[string]interface{}, outputDir string, o
 }
 
 // GenerateWebManifest Generates site webmanifest file
-func GenerateWebManifest(outputDir string, webManifestData Webmanifest) map[string]interface{} {
+func GenerateWebManifest(outputDir string, webManifestData map[string]interface{}) map[string]interface{} {
 	outputData := make(map[string]interface{})
+
+	for key, value := range webManifestData {
+		outputData[key] = value
+		fmt.Println(outputData[key])
+	}
+
+	//give default values for some key value pairs
 	outputData["name"] = func() string {
-		if webManifestData.Name != "" {
-			return fmt.Sprintf("%v", webManifestData.Name)
+		if webManifestData["name"] != "" {
+			return fmt.Sprintf("%v", webManifestData["name"])
 		}
 		return ""
 	}()
 	outputData["short_name"] = func() string {
-		if webManifestData.Short_name != "" {
-			return fmt.Sprintf("%v", webManifestData.Short_name)
+		if webManifestData["short_name"] != "" {
+			return fmt.Sprintf("%v", webManifestData["short_name"])
 		}
 		return ""
 	}()
 	outputData["background_color"] = func() string {
-		if webManifestData.Background_color != "" {
-			return fmt.Sprintf("%v", webManifestData.Background_color)
+		if webManifestData["background_color"] != "" {
+			return fmt.Sprintf("%v", webManifestData["background_color"])
 		}
 		return "#ffffff"
 	}()
 	outputData["theme_color"] = func() string {
-		if webManifestData.Theme_color != "" {
-			return fmt.Sprintf("%v", webManifestData.Theme_color)
+		if webManifestData["theme_color"] != "" {
+			return fmt.Sprintf("%v", webManifestData["theme_color"])
 		}
 		return "#ffffff"
 	}()
@@ -77,6 +84,7 @@ func GenerateWebManifest(outputDir string, webManifestData Webmanifest) map[stri
 
 // GenerateFavicon Generates favicon of specified size
 func GenerateFavicon(inputImage image.Image, imageName string, imgData map[string]interface{}, outputDir string) {
+	//to do: crop image to fix aspect ratio
 	src := imaging.Resize(inputImage, int(imgData["width"].(float64)), int(imgData["height"].(float64)), imaging.Lanczos)
 	err := os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {

@@ -23,7 +23,7 @@ type arguments struct {
 	Input_image      string
 	Output           output
 	Link             Link
-	Site_webmanifest Webmanifest
+	Site_webmanifest map[string]interface{}
 	Icons            interface{}
 }
 type output struct {
@@ -60,22 +60,22 @@ func validateArguments(args arguments) {
 	if args.Output.HTML.Name == "" {
 		log.Fatalf("Name of HTML file is missing in input json")
 	}
-	if args.Site_webmanifest.Background_color == "" {
-		args.Site_webmanifest.Background_color = "#ffffff"
+	if args.Site_webmanifest["background_color"] == "" {
+		args.Site_webmanifest["background_color"] = "#ffffff"
 	}
-	if args.Site_webmanifest.Theme_color == "" {
-		args.Site_webmanifest.Theme_color = "#ffffff"
+	if args.Site_webmanifest["theme_color"] == "" {
+		args.Site_webmanifest["theme_color"] = "#ffffff"
 	}
-	if args.Site_webmanifest.Name == "" {
-		args.Site_webmanifest.Name = "default-name"
+	if args.Site_webmanifest["name"] == "" {
+		args.Site_webmanifest["name"] = "default-name"
 	}
-	if args.Site_webmanifest.Short_name == "" {
-		args.Site_webmanifest.Short_name = "default-short-name"
+	if args.Site_webmanifest["short_name"] == "" {
+		args.Site_webmanifest["short_name"] = "default-short-name"
 	}
 }
 
 //ReadArgs Reads user provided arguments from the input file
-func ReadArgs() (string, string, Webmanifest, interface{}, Link, string) {
+func ReadArgs() (string, string, map[string]interface{}, interface{}, Link, string) {
 	inputArgsFile := flag.String("inputArgs", "", "REQUIRED: input arguments")
 	flag.Usage = Usage
 	flag.Parse()
